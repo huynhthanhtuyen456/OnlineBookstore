@@ -142,6 +142,20 @@ public class Main {
             System.out.println("- " + order.orderID);
         }
 
+        System.out.println("Please type your order number to find your order!");
+        Scanner searchOrderNumberScanner = new Scanner(System.in);
+        String searchOrderNumber = searchOrderNumberScanner.nextLine();
+        while (searchOrderNumber.isEmpty()) {
+            System.out.println("Please re-type the Order Number:");
+        }
+        Order searchOrderResult = BinarySearch.searchOrderByNumber(orders, searchOrderNumber);
+        if (searchOrderResult != null) {
+            System.out.println("Order found: " + searchOrderResult.orderID);
+        }
+        else {
+            System.out.println("Order not found.");
+        }
+
         // Dequeue and process an order
         Order currentOrder = orderQueue.dequeue();
         String orderID = currentOrder.orderID;
@@ -159,20 +173,6 @@ public class Main {
         for (Book book : currentOrder.books) {
             System.out.println(book.Display());
             System.out.println("\n");
-        }
-
-        System.out.println("Please type your order number to find your order!");
-        Scanner searchOrderNumberScanner = new Scanner(System.in);
-        String searchOrderNumber = searchOrderNumberScanner.nextLine();
-        while (searchOrderNumber.isEmpty()) {
-            System.out.println("Please re-type the Order Number:");
-        }
-        Order searchOrderResult = BinarySearch.searchOrderByNumber(orders, searchOrderNumber);
-        if (searchOrderResult != null) {
-            System.out.println("Order found: " + searchOrderResult.orderID);
-        }
-        else {
-            System.out.println("Order not found.");
         }
     }
 }
