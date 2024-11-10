@@ -33,15 +33,18 @@ public class LinearSearch {
 
     public static List<Book> searchBook(List<Book> books, String query) {
         List<Book> booksToSearch = new ArrayList<>();
+        query = query.toLowerCase();
         if (books == null) {
             throw new IllegalArgumentException("Books list cannot be null.");
         }
-        if (query == null || query.isEmpty()) {
+        if (query.isEmpty()) {
             throw new IllegalArgumentException("Book Title cannot be null or empty.");
         }
 
         for (Book book : books) {
-            if (book.title.contains(query) || book.author.name.contains(query) || book.isbn.contains(query)) {
+            if (book.title.toLowerCase().contains(query)
+                    || book.author.name.toLowerCase().contains(query)
+                    || book.isbn.toLowerCase().contains(query)) {
                 booksToSearch.add(book);
             }
         }

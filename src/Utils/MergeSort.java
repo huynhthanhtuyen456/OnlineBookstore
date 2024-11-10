@@ -142,4 +142,70 @@ public class MergeSort {
             mergeBookList(books, l, m, r);
         }
     }
+
+    static void mergeBookListByISBN(List<Book> books, int l, int m, int r)
+    {
+        // Find sizes of two sub-arrays to be merged
+        int n1 = m - l + 1;
+        int n2 = r - m;
+
+        // Create temp arrays
+        Book[] L = new Book[n1];
+        Book[] R = new Book[n2];
+
+        // Copy data to temp arrays
+        for (int i = 0; i < n1; ++i)
+            L[i] = books.get(l + i);
+        for (int j = 0; j < n2; ++j)
+            R[j] = books.get(m + 1 + j);
+
+        // Merge the temp arrays
+
+        // Initial indices of first and second sub-arrays
+        int i = 0, j = 0;
+
+        // Initial index of merged subarray array
+        int k = l;
+        while (i < n1 && j < n2) {
+            if (L[i].isbn.compareTo(R[j].isbn) < 0) {
+                books.set(k, L[i]);
+                i++;
+            }
+            else {
+                books.set(k, R[j]);
+                j++;
+            }
+            k++;
+        }
+
+        // Copy remaining elements of L[] if any
+        while (i < n1) {
+            books.set(k, L[i]);
+            i++;
+            k++;
+        }
+
+        // Copy remaining elements of R[] if any
+        while (j < n2) {
+            books.set(k, R[j]);
+            j++;
+            k++;
+        }
+    }
+
+    public static void sortBooksByISBN(List<Book> books, int l, int r)
+    {
+        if (l < r) {
+
+            // Find the middle point
+            int m = l + (r - l) / 2;
+
+            // Sort first and second halves
+            sortBooksByTitle(books, l, m);
+            sortBooksByTitle(books, m + 1, r);
+
+            // Merge the sorted halves
+            mergeBookListByISBN(books, l, m, r);
+        }
+    }
 }

@@ -43,6 +43,7 @@ public class Main {
             book.title = titles[i];
             book.author = authors.get(i);
             book.edition = i;
+            book.availableQuantity = (int)(Math.random() * 50 + 1);
             books.add(book);
         }
 
@@ -82,6 +83,17 @@ public class Main {
             System.out.println("- " + book.Display());
         }
 
+        System.out.println("Do you want to sort list of books by author name? Type any character.");
+        Scanner sortByAuthorNameScanner = new Scanner(System.in);
+        String sortByAuthorName = sortByAuthorNameScanner.nextLine();
+        if (!sortByAuthorName.isEmpty()) {
+            System.out.println("Our available books will be sorted by title following alphabetically:");
+            QuickSort.sortByAuthor(books, 0, books.size() - 1);
+            for (Book book : books) {
+                System.out.println("- " + book.Display());
+            }
+        }
+
         boolean continueToOrder = false;
         OrderQueue orderQueue = new OrderQueue();
 
@@ -117,7 +129,7 @@ public class Main {
             String bookOrderList = bookOrderScanner.nextLine();
             String[] bookArrayString = bookOrderList.split(",");
             System.out.println(Arrays.toString(bookArrayString));
-            QuickSort.sortByISBN(books, 0, books.size() - 1);
+            MergeSort.sortBooksByISBN(books, 0, books.size() - 1);
             for (String bookString : bookArrayString) {
                 Book book = BinarySearch.findBookByISBN(books, bookString);
                 if (book != null) {
@@ -209,8 +221,7 @@ public class Main {
                     MergeSort.sortBooksByTitle(order.books, 0, order.books.size() - 1);
                     System.out.println("Sorted books in order by title with orderID= " + order.orderID);
                     for (Book book : order.books) {
-                        System.out.println(book.Display());
-                        System.out.println("\n");
+                        System.out.println("    - " + book.Display());
                     }
                 }
             }
@@ -235,8 +246,7 @@ public class Main {
         MergeSort.sortBooksByTitle(currentOrder.books, 0, currentOrder.books.size() - 1);
         System.out.println("Sorted books in order by title: \n");
         for (Book book : currentOrder.books) {
-            System.out.println(book.Display());
-            System.out.println("\n");
+            System.out.println("    - " + book.Display());
         }
     }
 }
