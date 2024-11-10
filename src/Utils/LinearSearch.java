@@ -9,20 +9,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LinearSearch {
-    public static Order linearSearch(OrderQueue queue, String orderID) {
-        if (queue == null) {
+    public static List<Order> searchOrder(List<Order> orders, String query) {
+        List<Order> result = new ArrayList<>();
+        if (orders == null) {
             throw new IllegalArgumentException("Queue cannot be null.");
         }
-        if (orderID == null || orderID.isEmpty()) {
-            throw new IllegalArgumentException("Order ID cannot be null or empty.");
+        if (query == null || query.isEmpty()) {
+            throw new IllegalArgumentException("Search query cannot be null or empty.");
         }
 
-        for (Order order : queue.queue) {
-            if (order.orderID.equals(orderID)) {
-                return order;
+        for (Order order : orders) {
+            if (order.orderID.equals(query)) {
+                result.add(order);
+            } else {
+                List<Book> searchResults = LinearSearch.searchBook(order.books, query);
+                if (!searchResults.isEmpty()) {
+                    result.add(order);
+                }
             }
         }
-        return null;
+        return result;
     }
 
     public static List<Book> searchBook(List<Book> books, String query) {

@@ -19,7 +19,7 @@ public class QuickSort {
 
         for (int j = low; j < high; j++) {
             if (books.get(j).title.compareTo(pivot.title) < 0
-                    && books.get(j).author.name.compareTo(pivot.author.name) > 0) {
+                    || books.get(j).author.name.compareTo(pivot.author.name) < 0) {
                 i++;
                 Book temp = books.get(i);
                 books.set(i, books.get(j));

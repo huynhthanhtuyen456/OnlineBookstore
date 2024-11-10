@@ -1,6 +1,7 @@
 import Models.*;
 import Utils.BinarySearch;
 import Utils.LinearSearch;
+import Utils.MergeSort;
 import Utils.QuickSort;
 
 import java.util.*;
@@ -9,7 +10,6 @@ public class Main {
     public static void main(String[] args) {
         List<Book> books = new ArrayList<>();
         List<Author> authors = new ArrayList<>();
-        List<Customer> customers = new ArrayList<>();
         String[] titles = {
                 "Java Basics",
                 "Data Structures",
@@ -17,7 +17,8 @@ public class Main {
                 "Operating Systems",
                 "War And Peace",
                 "Networking Foundation",
-                "Agile Process"
+                "Agile Process",
+                "Project Management"
         };
         String[] authorNames = {
                 "John",
@@ -26,25 +27,14 @@ public class Main {
                 "Jack",
                 "Mary",
                 "Johnson",
-                "Jacob"
-        };
-        String[] customerNames = {
-                "Ben",
-                "Loki",
-                "Odin",
-                "Haki"
+                "Jacob",
+                "Alice"
         };
 
         for (String authorName : authorNames) {
             Author author = new Author();
             author.name = authorName;
             authors.add(author);
-        }
-
-        for (String customerName : customerNames) {
-            Customer customer = new Customer();
-            customer.name = customerName;
-            customers.add(customer);
         }
 
         for (int i = 0; i < titles.length; i++) {
@@ -63,6 +53,11 @@ public class Main {
         String customerName = customerNameScanner.nextLine();
         while (customerName.isEmpty()) {
             System.out.println("Please re-type your name:");
+            Scanner nameScanner = new Scanner(System.in);
+            customerName = nameScanner.nextLine();
+            if (!customerName.isEmpty()) {
+                break;
+            }
         }
         customer.name = customerName;
         System.out.println("Your name is " + customer.name);
@@ -71,13 +66,18 @@ public class Main {
         Scanner customerAddressScanner = new Scanner(System.in);
         String customerAddress = customerAddressScanner.nextLine();
         while (customerAddress.isEmpty()) {
-            System.out.println("Please re-enter your address:");
+            System.out.println("Please re-type your address:");
+            Scanner addressScanner = new Scanner(System.in);
+            customerAddress = addressScanner.nextLine();
+            if (!customerAddress.isEmpty()) {
+                break;
+            }
         }
         customer.address = customerAddress;
         System.out.println("Your address is " + customer.address);
 
         System.out.println("Our available books will be sorted by title following alphabetically:");
-        QuickSort.sortByTitle(books, 0, books.size() - 1);
+        MergeSort.sortBooksByTitle(books, 0, books.size() - 1);
         for (Book book : books) {
             System.out.println("- " + book.Display());
         }
@@ -91,6 +91,11 @@ public class Main {
             String searchBookTerm = searchBookTermScanner.nextLine();
             while (searchBookTerm.isEmpty()) {
                 System.out.println("Please re-type the Title of book:");
+                Scanner searchTermScanner = new Scanner(System.in);
+                searchBookTerm = searchTermScanner.nextLine();
+                if (!searchBookTerm.isEmpty()) {
+                    break;
+                }
             }
 
             // Search for a book by title using Linear Search
@@ -141,20 +146,79 @@ public class Main {
         for (Order order : orders) {
             System.out.println("- " + order.orderID);
         }
+        System.out.println("You can search order by 2 ways:");
+        System.out.println(" - 1. By Order Number");
+        System.out.println(" - 2. By Title, Author, ISBN of books which you ordered.\n");
+        System.out.println("Please type 1 or 2 to choose one of 2 options");
+        Scanner searchOrderOptionScanner = new Scanner(System.in);
+        String searchOrderOption = searchOrderOptionScanner.nextLine();
+        while (searchOrderOption.isEmpty() || !(searchOrderOption.equals("1") || searchOrderOption.equals("2"))) {
+            System.out.println("Please re-type your search order option:");
+            Scanner optionScanner = new Scanner(System.in);
+            searchOrderOption = optionScanner.nextLine();
+            if (!searchOrderOption.isEmpty() && (searchOrderOption.equals("1") || searchOrderOption.equals("2"))) {
+                break;
+            }
+        }
 
-        System.out.println("Please type your order number to find your order!");
-        Scanner searchOrderNumberScanner = new Scanner(System.in);
-        String searchOrderNumber = searchOrderNumberScanner.nextLine();
-        while (searchOrderNumber.isEmpty()) {
-            System.out.println("Please re-type the Order Number:");
+        if (searchOrderOption.equals("1")) {
+            System.out.println("Please type your order number to find your order!");
+            Scanner searchOrderNumberScanner = new Scanner(System.in);
+            String searchOrderNumber = searchOrderNumberScanner.nextLine();
+            while (searchOrderNumber.isEmpty()) {
+                System.out.println("Please re-type the Order Number:");
+                Scanner orderNumberScanner = new Scanner(System.in);
+                searchOrderNumber = orderNumberScanner.nextLine();
+                if (!searchOrderNumber.isEmpty()) {
+                    break;
+                }
+            }
+            // Sort list of orders before searching
+            MergeSort.sortOrdersByNumber(orders, 0, orders.size() - 1);
+            // Binary Search using recursive
+            Order searchOrderResult = BinarySearch.searchOrderByNumber(
+                    orders,
+                    0,
+                    orders.size() - 1,
+                    searchOrderNumber
+            );
+            if (searchOrderResult != null) {
+                System.out.println("Order found: " + searchOrderResult.orderID);
+            }
+            else {
+                System.out.println("Order not found.");
+            }
+        } else {
+            System.out.println("Please type search term to find your order!");
+            Scanner searchTermOrderScanner = new Scanner(System.in);
+            String searchTermOrder = searchTermOrderScanner.nextLine();
+            while (searchTermOrder.isEmpty()) {
+                System.out.println("Please re-type the search term order:");
+                Scanner orderNumberScanner = new Scanner(System.in);
+                searchTermOrder = orderNumberScanner.nextLine();
+                if (!searchTermOrder.isEmpty()) {
+                    break;
+                }
+            }
+            // Binary Search using recursive
+            List<Order> searchOrderResult = LinearSearch.searchOrder(orders, searchTermOrder);
+            if (!searchOrderResult.isEmpty()) {
+                for (Order order : searchOrderResult) {
+                    System.out.println("Order found: " + order.orderID);
+                    // Sort books in the order by title
+                    MergeSort.sortBooksByTitle(order.books, 0, order.books.size() - 1);
+                    System.out.println("Sorted books in order by title with orderID= " + order.orderID);
+                    for (Book book : order.books) {
+                        System.out.println(book.Display());
+                        System.out.println("\n");
+                    }
+                }
+            }
+            else {
+                System.out.println("Order not found.");
+            }
         }
-        Order searchOrderResult = BinarySearch.searchOrderByNumber(orders, searchOrderNumber);
-        if (searchOrderResult != null) {
-            System.out.println("Order found: " + searchOrderResult.orderID);
-        }
-        else {
-            System.out.println("Order not found.");
-        }
+
 
         // Dequeue and process an order
         Order currentOrder = orderQueue.dequeue();
@@ -168,7 +232,7 @@ public class Main {
         System.out.println("\n");
 
         // Sort books in the order by title
-        QuickSort.quickSort(currentOrder.books, 0, currentOrder.books.size() - 1);
+        MergeSort.sortBooksByTitle(currentOrder.books, 0, currentOrder.books.size() - 1);
         System.out.println("Sorted books in order by title: \n");
         for (Book book : currentOrder.books) {
             System.out.println(book.Display());
