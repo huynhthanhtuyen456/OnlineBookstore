@@ -1,7 +1,6 @@
 package Models;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Order {
     public String orderID;
@@ -12,7 +11,7 @@ public class Order {
     public Order(Customer customer, String shippingAddress, List<Book> books) {
         this.customer = customer;
         this.shippingAddress = shippingAddress;
-        this.orderID = UUID.randomUUID().toString();
+        this.orderID = "" + (int)(Math.random() * 10000);
         this.books = books;
     }
 }
