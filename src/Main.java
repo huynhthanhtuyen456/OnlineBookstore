@@ -18,7 +18,15 @@ public class Main {
                 "War And Peace",
                 "Networking Foundation",
                 "Agile Process",
-                "Project Management"
+                "Project Management",
+                "Java Programming",
+                "Manhattan's Project",
+                "The Secret of Las Almas",
+                "The Secret of Gulf War",
+                "Pride and Prejudice",
+                "The Great Gatsby",
+                "Benefits of Eating Apple",
+                "World War II"
         };
         String[] authorNames = {
                 "John",
@@ -28,7 +36,17 @@ public class Main {
                 "Mary",
                 "Johnson",
                 "Jacob",
-                "Alice"
+                "Alice",
+                "John Henry",
+                "Mac.Author",
+                "Robert",
+                "Robert.J.Oppenheimer",
+                "Helen Park",
+                "Jason Portman",
+                "Jane Austen",
+                "F. Scott Fitzgerald",
+                "Tom Hawk",
+                "Jefferson"
         };
 
         for (String authorName : authorNames) {
@@ -39,7 +57,7 @@ public class Main {
 
         for (int i = 0; i < titles.length; i++) {
             Book book = new Book();
-            book.isbn = "" + i + i;
+            book.isbn = "" + i;
             book.title = titles[i];
             book.author = authors.get(i);
             book.edition = i;
@@ -140,7 +158,9 @@ public class Main {
                 }
             }
             // Add orders to the queue
-            orderQueue.enqueue(new Order(customer, customer.address, orderedBooks));
+            if (!orderedBooks.isEmpty()) {
+                orderQueue.enqueue(new Order(customer, customer.address, orderedBooks));
+            }
 
             System.out.println("Do you want to make another order? Type Y/y for Yes and N/n for No.");
             try {
@@ -153,7 +173,12 @@ public class Main {
             }
         } while (continueToOrder);
 
-        List<Order> orders = new ArrayList<>(orderQueue.queue);
+        List<Order> orders;
+        if (orderQueue.isEmpty()) {
+            orders = new ArrayList<>();
+        } else {
+            orders = new ArrayList<>(orderQueue.queue);
+        }
         System.out.println("List of orders:");
         for (Order order : orders) {
             System.out.println("- " + order.orderID);
@@ -196,6 +221,11 @@ public class Main {
             );
             if (searchOrderResult != null) {
                 System.out.println("Order found: " + searchOrderResult.orderID);
+                MergeSort.sortBooksByTitle(searchOrderResult.books, 0, searchOrderResult.books.size() - 1);
+                System.out.println("Sorted books in order by title with orderID= " + searchOrderResult.orderID);
+                for (Book book : searchOrderResult.books) {
+                    System.out.println("    - " + book.Display());
+                }
             }
             else {
                 System.out.println("Order not found.");
@@ -232,21 +262,23 @@ public class Main {
 
 
         // Dequeue and process an order
-        Order currentOrder = orderQueue.dequeue();
-        String orderID = currentOrder.orderID;
-        System.out.println(
-                "Processing order for: "
-                        + currentOrder.customer.name
-                        + " with OrderID: "
-                        + orderID
-        );
-        System.out.println("\n");
+        if (!orderQueue.isEmpty()) {
+            Order currentOrder = orderQueue.dequeue();
+            String orderID = currentOrder.orderID;
+            System.out.println(
+                    "Processing order for: "
+                            + currentOrder.customer.name
+                            + " with OrderID: "
+                            + orderID
+            );
+            System.out.println("\n");
 
-        // Sort books in the order by title
-        MergeSort.sortBooksByTitle(currentOrder.books, 0, currentOrder.books.size() - 1);
-        System.out.println("Sorted books in order by title: \n");
-        for (Book book : currentOrder.books) {
-            System.out.println("    - " + book.Display());
+            // Sort books in the order by title
+            MergeSort.sortBooksByTitle(currentOrder.books, 0, currentOrder.books.size() - 1);
+            System.out.println("Sorted books in order by title: \n");
+            for (Book book : currentOrder.books) {
+                System.out.println("    - " + book.Display());
+            }
         }
     }
 }
