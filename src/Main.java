@@ -95,6 +95,11 @@ public class Main {
         customer.address = customerAddress;
         System.out.println("Your address is " + customer.address);
 
+        System.out.println("Unsorted Books:");
+        for (Book book : books) {
+            System.out.println("- " + book.Display());
+        }
+
         System.out.println("Our available books will be sorted by title following alphabetically:");
         MergeSort.sortBooksByTitle(books, 0, books.size() - 1);
         for (Book book : books) {
